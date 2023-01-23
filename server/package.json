@@ -1,0 +1,17 @@
+{
+  "name": "webstreams",
+  "version": "1.0.0",
+  "description": "NodeJS v19.4.0 Database = https://www.kaggle.com/datasets/danielalbarracinm/list-of-anime-from-1990-to-2022?resource=download",
+  "main": "index.js",
+  "type": "module",
+  "engines": {
+    "node": "v19.4.0"
+  },
+  "scripts": {
+    "dev": "node --watch index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
