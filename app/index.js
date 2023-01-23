@@ -1,10 +1,10 @@
 const API_URL = "http://localhost:3000";
+let counter = 0;
 
 async function consumeAPI(signal) {
     const response = await fetch(API_URL, {
         signal
     })
-    let counter = 0;
     const reader = response.body
         .pipeThrough(new TextDecoderStream())
         .pipeThrough(parseNDJSON())
@@ -25,13 +25,16 @@ function appendToHTML(element) {
             const card = `
                 <article>
                     <div class="text">
-                        <h3>${title}</h3>
-                        <p>${description}</p>
+                        <h3>[${++counter}] ${title}</h3>
+                        <p>${description.slice(0, 100)}</p>
                         <a href="${url_anime}">Link</a>
                     </div>
                 </article>
             `
             element.innerHTML += card;
+        },
+        abort(reason) {
+            console.log("aborted", reason)
         }
     })
 }
@@ -60,6 +63,14 @@ const [
     cards
 ] = ["start", "stop", "cards"].map(item => document.getElementById(item));
 
-const abortController = new AbortController();
-const readable = await consumeAPI(abortController.signal);
-readable.pipeTo(appendToHTML(cards));
+let abortController = new AbortController();
+start.addEventListener("click", async () => {
+    const readable = await consumeAPI(abortController.signal);
+    readable.pipeTo(appendToHTML(cards));
+})
+
+stop.addEventListener("click", () => {
+    abortController.abort();
+    console.log("aborting...");
+    abortController = new AbortController();
+})
